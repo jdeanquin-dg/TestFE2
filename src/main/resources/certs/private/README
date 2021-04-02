@@ -1,0 +1,23 @@
+Se utiliza la configuracion por defecto del openssl, agregando
+como requisito el campo serialNumber.
+
+# Generacion de privada
+openssl genrsa -out privkey.pem 1024
+
+# Generacion de requerimiento del certificado en PKCS#10
+openssl req -new -key privkey.pem -out cert.csr -config openssl.cnf
+
+# Generacion del keystore en PKCS#12
+openssl pkcs12 -export -in cert.crt -inkey privkey.pem -name "coqui" -out coqui+store.p12
+
+
+#Implementacion
+
+openssl genrsa -out m0n1t0rdaptech.pem 1024
+openssl req -new -key m0n1t0rdaptech.pem -subj "/C=AR/O=daptech/CN=www.daptech.com.ar/serialNumber=CUIT 30709215147" -out cert.csr -config openssl.cnf
+openssl pkcs12 -export -inkey m0n1t0rdaptech.pem -in daptech_test.crt -out daptech_test.p12 -name "daptech_test"  
+
+#Mostrar el contenido del keystore jks.
+keytool -list -v -keystore wsaahomo.jks
+keytool -delete -alias afip-homo -keystore wsaahomo.jks
+keytool -import -keystore wsaahomo.jks -storepass soloio -alias afip-homo -file wsaahomo.afip.gov.ar.crt
